@@ -1,86 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Auto Maroon6</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
-      }
-
-      h1 {
-        text-align: center;
-        font-size: 3em;
-        margin-top: 0;
-        padding-top: 20px;
-      }
-
-      form {
-        max-width: 500px;
-        margin: 0 auto;
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-      }
-
-      label {
-        font-size: 1.2em;
-        font-weight: bold;
-      }
-
-      select {
-        padding: 10px;
-        font-size: 1.2em;
-        border-radius: 5px;
-        border: none;
-        background-color: #f2f2f2;
-        margin-bottom: 10px;
-      }
-
-      input[type="text"] {
-        padding: 10px;
-        font-size: 1.2em;
-        border-radius: 5px;
-        border: none;
-        background-color: #f2f2f2;
-        margin-bottom: 20px;
-        width: 100%;
-      }
-
-      button[type="submit"] {
-        background-color: #4CAF50;
-        color: white;
-        font-size: 1.2em;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-        margin-bottom: 10px;
-      }
-
-      button[type="submit"]:hover {
-        background-color: #3e8e41;
-      }
-    </style>
+    <title>Select Role</title>
   </head>
   <body>
-    <h1>Auto Maroon6</h1>
-    <form action="/response" method="POST">
-      <label for="character">Select a character:</label>
-      <br>
-      <select id="character" name="character">
+    <h1>Select Role</h1>
+    <form action="/response" method="post">
+      <select name="character">
         {% for role, content in system_roles.items() %}
         <option value="{{ role }}">{{ role }}</option>
         {% endfor %}
       </select>
-      <br>
-      <label for="message">What's happening?</label>
-      <br>
-      <input type="text" id="message" name="message">
-      <br>
-      <button type="submit">Send</button>
+      <br><br>
+      <label for="message">Message:</label>
+      <input type="text" id="message" name="message"><br><br>
+      <input type="submit" value="Submit">
     </form>
   </body>
 </html>

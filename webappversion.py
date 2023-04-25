@@ -2,7 +2,8 @@ from flask import Flask, render_template, request
 import openai
 
 app = Flask(__name__)
-#replace with your apikey
+
+#replace the api key
 openai.api_key = 'sk-xxx'
 
 # Define the system roles and their respective content
@@ -36,7 +37,7 @@ def response():
             )
             reply = chat.choices[0].text.strip()
             messages.append({"role": "assistant", "content": reply})
-            return render_template('response.html', messages=messages)
+        return render_template('response.html', messages=messages)
 
 if __name__ == '__main__':
     app.run(debug=True)
