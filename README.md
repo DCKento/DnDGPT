@@ -6,6 +6,7 @@ The application is fairly simple, leveraging ChatGPT via the OpenAI API key and 
 ## Pre-requisites
 Sign up for an OpenAI API key.
 In the python files, replace the openai.api_key value with your API key.
+Use pip to install the flask and openai modules
 
 ## Usage - Web App version
 
