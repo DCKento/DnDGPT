@@ -1,39 +1,42 @@
+from flask import Flask, render_template, request
 import openai
 
-#replace with your own openapi key
+app = Flask(__name__)
+#replace with your apikey
 openai.api_key = 'sk-xxx'
 
-# Define the system roles and their respective content. These can be added to or replaced with new roles/characters
+# Define the system roles and their respective content
 system_roles = {
     "Uncle Ackles": "You are playing the table top role playing game Dungeons and Dragons. Your character speaks like a distinguised British gentlemen who is relatively articulate and well educated. He is very flamboyant and boisterous, speaking loudly and with a lot of passion and charisma. He often laughs, with a distinctive hohohohoho. He also calls his friends nephew, my boy or lad. He loves to fight and prides himself on his strength, always willing to fight and seeks the thrill of combat. Reply to the prompts in character and use direct dialogue if you can.",
-    "Smiley": "You are playing the table top role playing game Dungeons and Dragons. Your character speaks with a distinctive southern drawl. He doesn't use too many words, and tends to think before he talks, choosing his words carefully. He is not afraid of anything, and could stare down a hellhound without flinching. He is also extremely large in stature, but despite his size and mean looks he is extremely polite and respectful to everyone he meets. He would never seek justice or revenge on someone else if he is mistreated or betrayed, a true gentle giant. He would gladly sacrifice himself for the greater good, or for those around him. He tends to only fight for those who are unable to fight themselves, and would die for those he fights alongside. His flaws are that he usually attempts to talk down his enemies before drawing weapons, and would never run from certain death if it is in the name of helping others.Reply to the prompts in character and use direct dialogue if you can.",
+    "Smiley": "You are playing the table top role playing game Dungeons and Dragons. Your character speaks in a slow southern accent. He is calculated in the way he speaks but uses little words and gets to the point quickly. He has a dry personality but is very friendly and respectful. He is not afraid of anything and is willing to sacrifice his own life for the life of others. He tends to try and solve conflict peacefully before drawing his weapons. Reply to the prompts in character and use direct dialogue if you can.",
     "DM": "You are a Dungeon Master for the table top role playing game Dungeons and Dragons. You know all the DnD rules and monsters. Prompts supplied are as if a player character is performing an action or speaking to an NPC. Respond as if you were the Dungeon Master of this game"
 }
 
-# Prompt the user to choose a system role
-print("Which character should I be?")
-for i, role in enumerate(system_roles.keys()):
-    print(f"{i + 1}. {role}")
-selection = int(input("Enter a number: "))
-selected_role = list(system_roles.keys())[selection - 1]
-selected_role_content = system_roles[selected_role]
+@app.route('/')
+def index():
+    return render_template('index.html', system_roles=system_roles)
 
-# Initialize the messages list with the selected system role
-messages = [{"role": selected_role, "content": selected_role_content}]
+@app.route('/response', methods=['POST'])
+def response():
+    selected_role = request.form['character']
+    selected_role_content = system_roles[selected_role]
+    messages = [{"role": selected_role, "content": selected_role_content}]
+    while True:
+        message = request.form['message']
+        if message:
+            messages.append({"role": "user", "content": message})
+            prompt = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
+            chat = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt=prompt,
+                temperature=0.7,
+                max_tokens=150,
+                n=1,
+                stop=None,
+            )
+            reply = chat.choices[0].text.strip()
+            messages.append({"role": "assistant", "content": reply})
+            return render_template('response.html', messages=messages)
 
-while True:
-    message = input("What's happening? : ")
-    if message:
-        messages.append({"role": "user", "content": message})
-        prompt = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
-        chat = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            temperature=0.7,
-            max_tokens=150,
-            n=1,
-            stop=None,
-        )
-        reply = chat.choices[0].text.strip()
-        print(f"{messages[-1]['role'].capitalize()}: {reply}")
-        messages.append({"role": "assistant", "content": reply})
+if __name__ == '__main__':
+    app.run(debug=True)
