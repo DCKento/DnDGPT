@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Auto Maroon6 - Response</title>
+    <style>
+      /* Global styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f8f8f8;
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      /* Message styles */
+      .message-container {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+      }
+
+      .message {
+        max-width: 60%;
+        padding: 1rem;
+        border-radius: 1rem;
+      }
+
+      .user {
+        background-color: #d0e8f2;
+        align-self: flex-start;
+      }
+
+      .assistant {
+        background-color: #f2d0d0;
+        align-self: flex-end;
+      }
+
+      /* Form styles */
+      form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1rem;
+      }
+
+      input[type="text"] {
+        max-width: 60%;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: none;
+        margin-bottom: 1rem;
+      }
+
+      input[type="submit"] {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Auto Maroon6 - Chat</h1>
+    <div id="messages">
+      {% for message in messages %}
+        <div class="message-container">
+          <div class="message {{ message.role }}">
+            <p>{{ message.content }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <form method="POST" action="/">
+      <input type="text" name="message" placeholder="Type your message...">
+      <input type="submit" value="Send">
+    </form>
+  </body>
+</html>
