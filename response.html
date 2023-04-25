@@ -4,94 +4,84 @@
     <title>Chat Response</title>
     <style>
       body {
+        background-color: #F9F9F9;
         font-family: Arial, Helvetica, sans-serif;
-        background-color: #f1f1f1;
       }
-
+      
       h1 {
+        color: #383838;
+        margin-top: 50px;
         text-align: center;
-        color: #333;
       }
-
+      
       .message-container {
-        padding: 10px;
-        margin: 10px;
-        border-radius: 5px;
-        max-width: 80%;
-        word-wrap: break-word;
-        display: inline-block;
+        display: flex;
+        flex-direction: column;
+        margin: 20px;
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
       }
-
-      .user-message {
-        background-color: #c2e5ff;
-      }
-
-      .assistant-message {
-        background-color: #f0f0f0;
-      }
-
+      
       .message-container p {
         margin: 0;
-        padding: 0;
-        font-size: 16px;
-        line-height: 1.4;
+        font-size: 18px;
+        line-height: 1.5;
       }
-
+      
+      .message-container p strong {
+        margin-right: 10px;
+        font-weight: bold;
+        color: #383838;
+      }
+      
+      .message-container p.assistant {
+        text-align: right;
+      }
+      
       form {
+        margin-top: 30px;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 10px;
       }
-
-      label {
-        font-size: 18px;
+      
+      form input[type="text"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        font-size: 16px;
+        width: 60%;
         margin-right: 10px;
       }
-
-      input[type="text"] {
-        padding: 8px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        width: 70%;
-      }
-
-      input[type="submit"] {
-        background-color: #4CAF50;
+      
+      form input[type="submit"] {
+        background-color: #5AAC44;
         color: white;
-        padding: 8px;
-        font-size: 16px;
         border: none;
         border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
         cursor: pointer;
-        width: 30%;
-      }
-
-      input[type="submit"]:hover {
-        background-color: #45a049;
       }
     </style>
   </head>
   <body>
     <h1>Chat Response</h1>
-    {% for message in messages %}
-      {% if message.role == 'assistant' %}
-        <div class="message-container assistant-message">
-          <p><strong>Assistant:</strong> {{ message.content }}</p>
+    <div id="messages-container">
+      {% for message in messages %}
+        <div class="message-container">
+          <p class="{{ message.role }}">{{ message.role }}: {{ message.content }}</p>
         </div>
-      {% else %}
-        <div class="message-container user-message">
-          <p><strong>{{ message.role }}:</strong> {{ message.content }}</p>
-        </div>
-      {% endif %}
-    {% endfor %}
+      {% endfor %}
+    </div>
     <br>
     <form action="/response" method="post">
-      <input type="hidden" name="character" value="{{ messages[0].role }}">
-      <label for="message">Message:</label>
-      <input type="text" id="message" name="message"><br><br>
-      <input type="submit" value="Submit">
+      <input type="hidden" name="character" value="{{ messages[0]['role'] }}">
+      <input type="hidden" name="message_history" value="{{ messages | tojson }}">
+      <input type="text" id="message" name="message" placeholder="Enter message here...">
+      <input type="submit" value="Send">
     </form>
   </body>
 </html>

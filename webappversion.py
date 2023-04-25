@@ -3,7 +3,7 @@ import openai
 
 app = Flask(__name__)
 
-#replace the api key
+#add your own API key
 openai.api_key = 'sk-xxx'
 
 # Define the system roles and their respective content
@@ -13,31 +13,39 @@ system_roles = {
     "DM": "You are a Dungeon Master for the table top role playing game Dungeons and Dragons. You know all the DnD rules and monsters. Prompts supplied are as if a player character is performing an action or speaking to an NPC. Respond as if you were the Dungeon Master of this game"
 }
 
+chat_history = {}
+
 @app.route('/')
 def index():
     return render_template('index.html', system_roles=system_roles)
 
 @app.route('/response', methods=['POST'])
 def response():
-    selected_role = request.form['character']
-    selected_role_content = system_roles[selected_role]
-    messages = [{"role": selected_role, "content": selected_role_content}]
-    while True:
-        message = request.form['message']
-        if message:
-            messages.append({"role": "user", "content": message})
-            prompt = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
-            chat = openai.Completion.create(
-                engine="text-davinci-003",
-                prompt=prompt,
-                temperature=0.7,
-                max_tokens=150,
-                n=1,
-                stop=None,
-            )
-            reply = chat.choices[0].text.strip()
-            messages.append({"role": "assistant", "content": reply})
-        return render_template('response.html', messages=messages)
+    global chat_history
+    session_id = request.remote_addr # Use remote IP address as session ID
+    messages = chat_history.get(session_id, [])
+    if not messages:
+        selected_role = request.form['character']
+        selected_role_content = system_roles[selected_role]
+        messages.append({"role": selected_role, "content": selected_role_content})
+
+    message = request.form['message']
+    if message:
+        messages.append({"role": "user", "content": message})
+        prompt = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
+        chat = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            temperature=0.7,
+            max_tokens=150,
+            n=1,
+            stop=None,
+        )
+        reply = chat.choices[0].text.strip()
+        messages.append({"role": "assistant", "content": reply})
+
+    chat_history[session_id] = messages
+    return render_template('response.html', messages=messages)
 
 if __name__ == '__main__':
     app.run(debug=True)
