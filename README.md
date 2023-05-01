@@ -5,11 +5,11 @@ The application is fairly simple, leveraging ChatGPT via the OpenAI API and sett
 
 Primarily, this project was created as a small project for me to start experimenting with the OpenAI API via Python and learn about how the API works while building a fun little program to show my friends.
 
-A very basic web interface is included using Flask, though the application performs better via the CLI as the response is noticebly faster via the CLI.
+A very basic web interface is included using Flask in the appversion.py file, though the the response is noticebly faster via the CLI in the commandlineversion.py file.
 
 ## Pre-requisites
 Sign up for an OpenAI API key.
-In the python files, replace the openai.api_key value with your API key.
+In both the python files, replace the openai.api_key value with your API key.
 Use pip to install the flask and openai modules
 
 ## Usage - Web App version
