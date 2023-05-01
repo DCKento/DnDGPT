@@ -1,7 +1,11 @@
 # Maroon6.AI
-This project is a simple chatbot that simulates conversations of playable characters in my personal Icewind Dale DnD campaign. It uses the OpenAI GPT-3 language model to generate responses for the characters based on the user's input, which is the situation or dialogue the characters are engaged in.
+This project is a simple chatbot that simulates conversations of playable characters in my personal Icewind Dale DnD campaign. It uses the OpenAI GPT-3 language model to generate responses for the characters based on the user's input, which is the situation or dialogue the selected character is engaged in.
 
-The application is fairly simple, leveraging ChatGPT via the OpenAI API key and setting characterstics and traits for a character as a 'role'. This then allows you to select a role which generates a different output based on the character selected.
+The application is fairly simple, leveraging ChatGPT via the OpenAI API and setting characterstics and traits for a character as a 'role'. This then allows you to select a role at the start of the input which generates a different output based on the character selected.
+
+Primarily, this project was created as a small project for me to start experimenting with the OpenAI API via Python and learn about how the API works while building a fun little program to show my friends.
+
+A very basic web interface is included using Flask, though the application performs better via the CLI as the response is noticebly faster via the CLI.
 
 ## Pre-requisites
 Sign up for an OpenAI API key.
